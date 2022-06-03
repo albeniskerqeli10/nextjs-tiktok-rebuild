@@ -1,14 +1,18 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { Flex, Button, Container, AspectRatio } from "@chakra-ui/react";
+// import Video from "../components/UI/Video";
+import { Flex, Button, Spinner,Container,Box, AspectRatio } from "@chakra-ui/react";
 import { supabase } from "../utils/supabaseClient";
-import { useState, useEffect } from "react";
+import { useState, useEffect,lazy, Suspense } from "react";
 import { uuid } from "../utils/uuid";
+const Video = lazy(() => import("../components/UI/Video"));
+
+
+
 export default function Home() {
   const [videos, setVideos] = useState([]);
-  console.log(videos);
-  const [video, setVideo] = useState(null);
+  const [video,setVideo] = useState(null);
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -43,29 +47,35 @@ export default function Home() {
             title: "Sunrise in the mountains",
             author_name: "juju",
           });
-        console.log(result, data.Key);
       }
     }
   };
 
   return (
     <Flex alignItems="center" justifyContent="center">
-      <input onChange={handleVideo} type="file" />
-      <Button onClick={handleSubmit} colorScheme="blue" size="md">
-        Submit
-      </Button>
+    
       <Container
         display="flex"
         minH="80vh"
-        maxW="container.lg"
-        bgColor="red.400"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
       >
-        {videos &&
-          videos.map((video) => (
-            <AspectRatio maxW="250px" h="300px" ratio={1} key={video.id}>
-              <video src={video.url} autoPlay />
-            </AspectRatio>
-          ))}
+       <Box as="form">
+     <input onChange={handleVideo} type="file" />
+      <Button onClick={handleSubmit} colorScheme="blue" size="md">
+        Submitn
+      </Button>
+     </Box>
+       <Box as="div" display="flex" alignItems="center" justifyContent="center" gap="20px" flexWrap="wrap">
+       {videos &&
+
+videos.map((video) => (
+  
+ <Video key={video.id} video={video}/>
+))}
+       </Box>
+          
       </Container>
     </Flex>
   );
