@@ -1,12 +1,9 @@
 import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-// import Video from "../components/UI/Video";
-import { Flex, Button, Spinner,Container,Box, AspectRatio } from "@chakra-ui/react";
+import Video from "../components/UI/Video";
+import { Flex, Button,Container,Box, AspectRatio } from "@chakra-ui/react";
 import { supabase } from "../utils/supabaseClient";
-import { useState, useEffect,lazy, Suspense } from "react";
+import { useState, useEffect,lazy } from "react";
 import { uuid } from "../utils/uuid";
-const Video = lazy(() => import("../components/UI/Video"));
 
 
 
@@ -16,7 +13,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const { data, error } = await supabase.from("videos").select();
+      const { data } = await supabase.from("videos").select();
       if (data) {
         setVideos(data);
       }
@@ -37,8 +34,6 @@ export default function Home() {
         .upload(uuid(), video, {
           public: true,
         });
-
-      console.log(data, error);
       if (data) {
         const { data: result, error: err } = await supabase
           .from("videos")
@@ -72,7 +67,7 @@ export default function Home() {
 
 videos.map((video) => (
   
- <Video key={video.id} video={video}/>
+ <Video key={video.id} video={video} videos={videos}/>
 ))}
        </Box>
           
